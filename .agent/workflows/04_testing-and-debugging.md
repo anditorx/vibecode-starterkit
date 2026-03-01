@@ -4,11 +4,13 @@ description: Test and debug the application using Browser Control to ensure all 
 
 # 04 Testing & Debugging with Browser Control
 
-This workflow uses the Antigravity Browser Control to verify the end-to-end functionality of Maulana Laundry Web App.
+This workflow uses the Antigravity Browser Control to verify the end-to-end functionality of @anditorx GoClean Web App.
 
 ## 1. Landing Page Verification
+
 // turbo
 Verify all navigation links and sections on the landing page.
+
 ```bash
 # Task for Browser Subagent:
 # 1. Open http://localhost:5173
@@ -18,21 +20,25 @@ Verify all navigation links and sections on the landing page.
 ```
 
 ## 2. Admin Login Flow
+
 // turbo
 Test the login process with seeded credentials or Demo button.
+
 ```bash
 # Task for Browser Subagent:
 # 1. Navigate to http://localhost:5173/admin/login
 # 2. OPTION A: Click "Use Demo Account" button.
-# 3. OPTION B: Enter email: admin@laundry.com / password: admin123
+# 3. OPTION B: Enter email: admin@GoClean.com / password: admin123
 # 4. Click login button.
 # 5. Verify it redirects to /admin/dashboard.
 # NOTE: If login fails, verify backend is running on port 8080.
 ```
 
 ## 3. Dashboard Interactivity
+
 // turbo
 Test sidebar, multi-tab system, and navigation.
+
 ```bash
 # Task for Browser Subagent:
 # 1. On Dashboard, click sidebar menus: Users, Transactions, Services.
@@ -42,8 +48,10 @@ Test sidebar, multi-tab system, and navigation.
 ```
 
 ## 4. Logout & Security
+
 // turbo
 Test logout and protected route access.
+
 ```bash
 # Task for Browser Subagent:
 # 1. Click Profile Dropdown -> Logout (Terminate Session).
@@ -53,13 +61,17 @@ Test logout and protected route access.
 ```
 
 ## 5. Automated Debugging
+
 If the browser subagent reports an error (red screen, console error, or failed navigation):
+
 1. **Analyze logs**: Check `backend/output.log` and browser console.
 2. **Fix Code**: Apply necessary fixes via `replace_file_content`.
 3. **Re-test**: Run the workflow step again until successful.
 
 ## 6. Production Connectivity Troubleshooting
+
 If the application works in local but fails in production (Railway):
+
 - **CORS Check**: Verify Backend logs for "CORS panic" (wildcard + credentials). Wildcards `*` cannot be used with `AllowCredentials: true`.
 - **URL Check**: Check Browser Console Network tab. If request hits `http://localhost:8080`, then `VITE_API_URL` was not embedded correctly during build.
 - **Cache Purge**: Use "Clear site data" in browser Application tab to bypass Service Worker cache.

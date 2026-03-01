@@ -4,7 +4,7 @@
 BACKEND_PORT=8080
 FRONTEND_PORT=5173
 
-echo "🚀 Starting Maulana Laundry Application..."
+echo "🚀 Starting @anditorx GoClean Application..."
 
 # 1. Kill existing processes on ports
 echo "🔍 Checking for existing processes on ports $BACKEND_PORT and $FRONTEND_PORT..."

@@ -1,24 +1,28 @@
 ---
-description: This workflow initializes a Go backend project using Fiber v2, GORM (PostgreSQL), JWT, and Bcrypt. It sets up the folder structure, authentication, and database models for a Laundry Web App.
+description: This workflow initializes a Go backend project using Fiber v2, GORM (PostgreSQL), JWT, and Bcrypt. It sets up the folder structure, authentication, and database models for a GoClean Web App.
 ---
 
 # 01 Backend Setup (Fiber + GORM + JWT)
 
-This workflow sets up the backend for the Laundry Web App using Go Fiber, GORM, and PostgreSQL. It includes authentication (JWT), password hashing (bcrypt), and a modular project structure.
+This workflow sets up the backend for the GoClean Web App using Go Fiber, GORM, and PostgreSQL. It includes authentication (JWT), password hashing (bcrypt), and a modular project structure.
 
 ## 1. Initialize Go Module
+
 // turbo
 Initialize the Go module in the `backend` directory.
+
 ```bash
 cd backend
 if [ ! -f go.mod ]; then
-    go mod init laundry-backend
+    go mod init GoClean-backend
 fi
 ```
 
 ## 1.1 Setup .gitignore
+
 // turbo
 Create a `.gitignore` file to prevent sensitive files like `.env` from being tracked.
+
 ```bash
 cd backend
 if [ ! -f .gitignore ]; then
@@ -47,8 +51,10 @@ fi
 ```
 
 ## 2. Install Dependencies
+
 // turbo
 Install Fiber, GORM, Postgres driver, JWT, Bcrypt, UUID, and Godotenv.
+
 ```bash
 cd backend
 go get -u github.com/gofiber/fiber/v2
@@ -61,8 +67,10 @@ go get -u github.com/google/uuid
 ```
 
 ## 3. Create Project Structure
+
 // turbo
 Create the modular folder structure.
+
 ```bash
 cd backend
 mkdir -p cmd
@@ -76,10 +84,13 @@ mkdir -p utils
 ```
 
 ## 4. Configuration & Database
+
 Set up the database connection and configuration.
 
 ### 4.1 Config
+
 Create `config/config.go`.
+
 ```go
 package config
 
@@ -101,7 +112,9 @@ func Get(key string) string {
 ```
 
 ### 4.2 Database Connection
+
 Create `database/connection.go`.
+
 ```go
 package database
 
@@ -109,7 +122,7 @@ import (
 	"fmt"
 	"log"
 
-	"laundry-backend/config"
+	"GoClean-backend/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -145,7 +158,9 @@ func Connect() {
 ## 5. Utilities (Password & JWT)
 
 ### 5.1 Password Hashing
+
 Create `utils/password.go`.
+
 ```go
 package utils
 
@@ -165,13 +180,15 @@ func CheckPasswordHash(password, hash string) bool {
 ```
 
 ### 5.2 JWT Utilities
+
 Create `utils/jwt.go`.
+
 ```go
 package utils
 
 import (
 	"time"
-	"laundry-backend/config"
+	"GoClean-backend/config"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -188,10 +205,13 @@ func GenerateToken(userID uint, role string) (string, error) {
 ```
 
 ## 6. Models (User, Service, Transaction)
+
 Create models with GORM tags.
 
 ### 6.1 User Model
+
 Create `models/user.go`.
+
 ```go
 package models
 
@@ -213,7 +233,9 @@ type User struct {
 ```
 
 ### 6.2 Service Model
+
 Create `models/service.go`.
+
 ```go
 package models
 
@@ -235,7 +257,9 @@ type Service struct {
 ```
 
 ### 6.3 Transaction Model
+
 Create `models/transaction.go`.
+
 ```go
 package models
 
@@ -260,12 +284,14 @@ type Transaction struct {
 ```
 
 ## 7. Middleware
+
 Create `middleware/auth.go`.
+
 ```go
 package middleware
 
 import (
-	"laundry-backend/config"
+	"GoClean-backend/config"
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/contrib/jwt"
 )
@@ -293,14 +319,16 @@ func jwtError(c *fiber.Ctx, err error) error {
 ```
 
 ## 8. Handlers (Basic Setup)
+
 Create `handlers/auth.go` just as an example.
+
 ```go
 package handlers
 
 import (
-	"laundry-backend/database"
-	"laundry-backend/models"
-	"laundry-backend/utils"
+	"GoClean-backend/database"
+	"GoClean-backend/models"
+	"GoClean-backend/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -361,19 +389,21 @@ func ChangePassword(c *fiber.Ctx) error {
 ```
 
 ## 9. Routes
+
 Create `routes/routes.go`.
+
 ```go
 package routes
 
 import (
-	"laundry-backend/handlers"
-	"laundry-backend/middleware"
+	"GoClean-backend/handlers"
+	"GoClean-backend/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api")
-	
+
 	// Auth
 	auth := api.Group("/auth")
 	auth.Post("/login", handlers.Login)
@@ -386,13 +416,15 @@ func SetupRoutes(app *fiber.App) {
 ```
 
 ## 10. Database Seeder
+
 Create `database/seeder.go` to handle initial data population.
+
 ```go
 package database
 
 import (
-	"laundry-backend/models"
-	"laundry-backend/utils"
+	"GoClean-backend/models"
+	"GoClean-backend/utils"
 	"log"
 )
 
@@ -404,7 +436,7 @@ func Seed() {
 		hash, _ := utils.HashPassword("admin123")
 		DB.Create(&models.User{
 			Name:     "Admin",
-			Email:    "admin@laundry.com",
+			Email:    "admin@GoClean.com",
 			Password: hash,
 			Role:     "admin",
 		})
@@ -428,15 +460,17 @@ func Seed() {
 ```
 
 ## 11. Main Entry & Migration
+
 Create `cmd/main.go`.
+
 ```go
 package main
 
 import (
-	"laundry-backend/config"
-	"laundry-backend/database"
-	"laundry-backend/models"
-	"laundry-backend/routes"
+	"GoClean-backend/config"
+	"GoClean-backend/database"
+	"GoClean-backend/models"
+	"GoClean-backend/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -455,13 +489,13 @@ func main() {
 	// 2. Auto Migrate
 	log.Println("Running Migrations...")
 	database.DB.AutoMigrate(&models.User{}, &models.Service{}, &models.Transaction{})
-	
+
 	// 3. Seed Data
 	database.Seed()
 
 	// 4. Init Fiber
 	app := fiber.New()
-	
+
 	// 5. Middleware
 	// Logger
 	app.Use(logger.New(logger.Config{
@@ -526,8 +560,10 @@ func main() {
 ```
 
 ## 12. Run Application
+
 // turbo
 Run the application (which runs migrations on start).
+
 ```bash
 cd backend
 go run cmd/main.go

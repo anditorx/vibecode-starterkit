@@ -1,6 +1,6 @@
 ---
 name: crud_generator
-description: A blueprint for generating new CRUD modules (Backend & Frontend) based on the Maulana Laundry Admin pattern.
+description: A blueprint for generating new CRUD modules (Backend & Frontend) based on the @anditorx GoClean Admin pattern.
 ---
 
 # CRUD Generator Blueprint
@@ -8,6 +8,7 @@ description: A blueprint for generating new CRUD modules (Backend & Frontend) ba
 Follow this blueprint to create a new management module (e.g., Inventory, Transactions, Customers).
 
 ## 1. Backend: Data Model
+
 Create `backend/models/[name].go`.
 
 ```go
@@ -28,7 +29,9 @@ type [ModelName] struct {
 ```
 
 ## 2. Backend: Handler
+
 Create `backend/handlers/[name]_handler.go`. Implement the following pattern:
+
 - `Get[Models]` (Filtered, Paginated, Unscoped for Archived)
 - `Create[Model]`
 - `Update[Model]`
@@ -37,6 +40,7 @@ Create `backend/handlers/[name]_handler.go`. Implement the following pattern:
 - `Delete[Model]` (Permanent)
 
 ## 3. Frontend: Type Definition
+
 Create `frontend/src/types/[name].ts`.
 
 ```typescript
@@ -50,16 +54,20 @@ export interface [ModelName] {
 ```
 
 ## 4. Frontend: Service Layer
+
 Create `frontend/src/services/[name].service.ts`. Use the Axios `api` instance.
 
 ## 5. Frontend: Page Component
+
 Create `frontend/src/pages/admin/[ModelName]Page.tsx`.
+
 - Copy structure from `UserPage.tsx`.
 - Include `isArchived` helper.
 - use `DataTable` component.
 - Implement `stats` cards at the top.
 
 ## 6. Registration
+
 1. **Backend**: Add to `database.DB.AutoMigrate` in `main.go`.
 2. **Backend**: Register routes in `routes/routes.go`.
 3. **Frontend**: Add route to `App.tsx`.

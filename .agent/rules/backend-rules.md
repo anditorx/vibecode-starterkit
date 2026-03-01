@@ -7,6 +7,7 @@ description: This document outlines the coding standards, architectural patterns
 This document serves as the single source of truth for all backend development in this repository. Follow these rules to ensure code consistency, maintainability, and security.
 
 ## 1. Project Structure
+
 We follow a modular, standard Go project layout:
 
 ```
@@ -26,12 +27,14 @@ backend/
 ## 2. Coding Standards
 
 ### 2.1 General Setup
+
 - **Go Version**: Use Go 1.21+
-- **Module Name**: `laundry-backend` (as defined in `go.mod`)
+- **Module Name**: `GoClean-backend` (as defined in `go.mod`)
 - **Formatting**: Always run `go fmt ./...` before committing.
 - **Linting**: Use `golangci-lint` to catch common errors.
 
 ### 2.2 Naming Conventions
+
 - **Files**: `snake_case.go` (e.g., `user_handler.go`, `db_connection.go`)
 - **Directories**: `lowercase` (e.g., `handlers`, `models`)
 - **Structs/Interfaces**: `PascalCase` (e.g., `User`, `ServiceRepository`)
@@ -40,12 +43,14 @@ backend/
 - **Constants**: `UpperCamelCase` or `ALL_CAPS` depending on usage (e.g., `StatusCompleted`, `DEFAULT_PORT`).
 
 ### 2.3 Error Handling
+
 - **Never ignore errors**: Always check `if err != nil`.
 - **Return errors**: Propagate errors up the stack rather than logging and exiting immediately in low-level functions.
 - **Context**: Wrap errors when useful, e.g., `fmt.Errorf("failed to create user: %w", err)`.
 - **HTTP Errors**: Use standard HTTP status codes (200, 201, 400, 401, 404, 500).
 
 ## 3. Library Stack
+
 - **Web Framework**: [Go Fiber v2](https://gofiber.io/)
 - **ORM**: [GORM](https://gorm.io/)
 - **Database**: PostgreSQL (via `pgx` driver or standard `lib/pq`)
@@ -55,11 +60,12 @@ backend/
 - **UUID**: `google/uuid` (Use for IDs if migrating from integer IDs, otherwise `uint`).
 
 ## 4. API Design & Response Format
+
 All API responses MUST follow a consistent JSON structure using a helper function (e.g., in `utils/response.go`).
 
 **CORS Configuration:**
-Always specify explicit allowed origins (or fetch from ENV) to prevent preflight failures. 
-*Note: Wildcard `*` cannot be used if `AllowCredentials` is `true`.*
+Always specify explicit allowed origins (or fetch from ENV) to prevent preflight failures.
+_Note: Wildcard `_`cannot be used if`AllowCredentials`is`true`.\*
 
 ```go
 allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
@@ -72,6 +78,7 @@ app.Use(cors.New(cors.Config{
 ```
 
 **Success Response:**
+
 ```json
 {
   "status": "success",
@@ -81,6 +88,7 @@ app.Use(cors.New(cors.Config{
 ```
 
 **Error Response:**
+
 ```json
 {
   "status": "error",
@@ -90,11 +98,13 @@ app.Use(cors.New(cors.Config{
 ```
 
 ## 5. Database Interaction
+
 - **GORM Models**: Define primary keys, foreign keys, and JSON tags explicitly.
 - **Soft Deletes**: Use `gorm.DeletedAt` for critical data (Users, Transactions).
 - **Transactions**: Use `tx := db.Begin()` for operations involving multiple tables (e.g., Creating an Order + OrderItems).
 
 ## 6. Authentication & Security
+
 - **Passwords**: NEVER store plain text. Always hash with `bcrypt` (cost 10-14).
 - **JWT**:
   - Sign with `HS256` or `RS256`.
@@ -103,10 +113,12 @@ app.Use(cors.New(cors.Config{
 - **Middleware**: Protect private routes using the JWT middleware.
 
 ## 7. Migration & Seeding
+
 - **AutoMigrate**: Use `db.AutoMigrate(&Model{})` in `main.go` or a separate migration script for development.
 - **Seeding**: Create a seeder function to populate initial data (Admin user, Default Services) if the database is empty.
 
 ## 8. Security & Secrets Management
+
 - **Environment Variables**:
   - NEVER commit `.env` files to version control.
   - Always provide an `.env.example` with dummy values for other developers.
@@ -117,6 +129,7 @@ app.Use(cors.New(cors.Config{
 - **Production Secrets**: Use secure vault services or platform-specific environment settings (e.g., Railway, Vercel).
 
 ## 9. Git Workflow
+
 - **Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/)
   - `feat: add user login`
   - `fix: resolve db connection timeout`

@@ -4,12 +4,14 @@ description: Deploy the Go Backend and React Frontend to Railway using Docker.
 
 # Railway Deployment Workflow
 
-This workflow provides the necessary configuration and steps to deploy the Maulana Laundry application to Railway.
+This workflow provides the necessary configuration and steps to deploy the @anditorx GoClean application to Railway.
 
 ## 1. Backend Configuration
+
 Create the following files in the `backend/` directory.
 
 ### .dockerignore
+
 ```dockerignore
 # Environment variables
 .env
@@ -41,6 +43,7 @@ build-errors.log
 ```
 
 ### Dockerfile
+
 ```dockerfile
 FROM golang:alpine AS builder
 
@@ -73,9 +76,11 @@ CMD ["./main"]
 ```
 
 ## 2. Frontend Configuration
+
 Create the following files in the `frontend/` directory.
 
 ### nginx.conf
+
 ```nginx
 server {
     listen 3001;
@@ -109,6 +114,7 @@ server {
 ```
 
 ### Dockerfile
+
 ```dockerfile
 # Build stage
 FROM node:20-alpine AS build
@@ -148,6 +154,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 
 ### .dockerignore (Frontend)
+
 ```dockerignore
 # Logs
 logs
@@ -176,26 +183,28 @@ dist-ssr
 ```
 
 ## 3. Railway Setup Steps
+
 1. **GitHub Repository**: Ensure your code is pushed to a GitHub repository.
 2. **Railway Project**: Create a new project on [Railway](https://railway.app/).
 3. **Add Database**: Add a PostgreSQL service to your Railway project.
 4. **Deploy Backend**:
-    - Connect your GitHub repo.
-    - Set the Root Directory to `backend`.
-    - Set Environment Variables:
-        - `PORT`: `8090`
-        - `SERVER_PORT`: `8090`
-        - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` (copy from Railway Postgres variables)
-        - `JWT_SECRET`: (your secure secret)
-        - `ALLOWED_ORIGINS`: `https://frontend-laundry-production.up.railway.app, http://localhost:5173`
+   - Connect your GitHub repo.
+   - Set the Root Directory to `backend`.
+   - Set Environment Variables:
+     - `PORT`: `8090`
+     - `SERVER_PORT`: `8090`
+     - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` (copy from Railway Postgres variables)
+     - `JWT_SECRET`: (your secure secret)
+     - `ALLOWED_ORIGINS`: `https://frontend-GoClean-production.up.railway.app, http://localhost:5173`
 5. **Deploy Frontend**:
-    - Connect your GitHub repo again.
-    - Set the Root Directory to `frontend`.
-    - Set Environment Variables:
-        - `PORT`: `3001`
-        - `VITE_API_URL`: (your backend railway URL, e.g., `https://backend-production.up.railway.app`)
+   - Connect your GitHub repo again.
+   - Set the Root Directory to `frontend`.
+   - Set Environment Variables:
+     - `PORT`: `3001`
+     - `VITE_API_URL`: (your backend railway URL, e.g., `https://backend-production.up.railway.app`)
 
 ### ⚠️ Critical Note on Environment Variables
+
 - **Vite Build Process**: Environment variables prefixed with `VITE_` are embedded into the client-side code **during the build process**.
 - **Redeploy Required**: If you change `VITE_API_URL` in the Railway settings, you **MUST** trigger a new deployment (Redeploy) for the changes to take effect in the browser. Changing the variable in the dashboard alone is not enough for the static build.
 - **Port Fallback**: Local development may fall back to port `5174` if `5173` is busy. Always check the terminal output for the correct local URL.
